@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.naah</groupId>
-    <artifactId>wolf-stomp</artifactId>
+    <artifactId>wolf-rabbitmq</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>wolf-stomp</name>
+    <name>wolf-rabbmit</name>
     <description>弹幕</description>
 
     <parent>
@@ -71,19 +71,35 @@
             <!--<artifactId>spring-cloud-starter-sleuth</artifactId>-->
         <!--</dependency>-->
 
+       <!--  <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency> -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        
-        
+        <dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>sockjs-client</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>stomp-websocket</artifactId>
+			<version>2.3.3</version>
+		</dependency>
          <!--rabbitmq-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
-        
         	<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
 <dependency>
     <groupId>io.springfox</groupId>
@@ -96,19 +112,11 @@
     <artifactId>springfox-swagger-ui</artifactId>
     <version>2.8.0</version>
 </dependency>
-    <dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.62</version>
-		</dependency>
-		
-		
-	    <!-- 添加极光sdk -->
-		<dependency>
-		    <groupId>cn.jpush.api</groupId>
-		    <artifactId>jpush-client</artifactId>
-		    <version>3.4.7</version>
-		</dependency>
+<dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.62</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -130,6 +138,7 @@
                 <!--<artifactId>spring-cloud-commons</artifactId>-->
                 <!--<version>2.0.0.BUILD-SNAPSHOT</version>-->
             <!--</dependency>-->
+
         </dependencies>
     </dependencyManagement>
 

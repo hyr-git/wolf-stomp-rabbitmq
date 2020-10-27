@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: wolf-eurekasever
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: m1832
+Implementation-Vendor-Id: com.naah
+Build-Jdk: 1.8.0_171
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/wolf-eurekasever
+Created-By: Maven Integration for Eclipse
+

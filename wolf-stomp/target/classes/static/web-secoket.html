@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>stomp</title>
+</head>
+<body>
+<br/><input id="text" type="text" />
+<div id="conversationDiv">
+            <label>输入你的名字</label> <input type="text" id="name" />
+            <br>
+            <label>输入消息</label> <input type="text" id="messgae" />
+            <button id="send" onclick="send();">发送</button>
+        </div>
+<button onclick="send()">发送消息</button>
+<button onclick="subscribe()">订阅消息/user/queue/message</button>
+<hr/>
+<div id="message"></div>
+</body>
+
+<script src="http://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+  // 建立连接对象（还未发起连接）
+  var socket = new SockJS("http://localhost:8080/webSocket");
+  socket = new SockJS("http://localhost:8888/webSocket");
+
+  // 获取 STOMP 子协议的客户端对象
+  var stompClient = Stomp.over(socket);
+
+  // 向服务器发起websocket连接并发送CONNECT帧
+  stompClient.connect({},
+      function connectCallback(frame) {
+        // 连接成功时（服务器响应 CONNECTED 帧）的回调方法
+        setMessageInnerHTML("连接成功");
+      },
+      function errorCallBack(error) {
+        // 连接失败时（服务器响应 ERROR 帧）的回调方法
+        setMessageInnerHTML("连接失败");
+      }
+  );
+
+  //订阅消息
+  function subscribe() {
+   /*  stompClient.subscribe('/topic/hello', function (response) {
+      var returnData = response.body;
+      setMessageInnerHTML("/topic/hello 你接收到的消息为:" + returnData);
+    }); */
+	  stompClient.subscribe('/toWeb', function (response) {
+		  alert(response);
+	      var returnData = response.body;
+	      setMessageInnerHTML("/toWeb 你接收到的消息为:" + returnData);
+	    });
+	  stompClient.subscribe('/toApp', function (response) {
+	      var returnData = response.body;
+	      setMessageInnerHTML("/toApp--- 你接收到的消息为:" + returnData);
+	    });
+  }
+  
+  
+
+  //将消息显示在网页上
+  function setMessageInnerHTML(innerHTML) {
+    document.getElementById('message').innerHTML += innerHTML + '<br/>';
+  }
+
+  function send() {
+    //stompClient.send("/app/greeting", {}, document.getElementById("text").value);
+         var name = $('#name').val();
+            var message = $('#messgae').val();
+    stompClient.send("/app/greeting", {}, JSON.stringify({toUserId:name,context:message}));
+
+    //stompClient.send("/app/toApp", {}, document.getElementById("text").value);
+  }
+</script>
+
+</html>
