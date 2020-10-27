@@ -102,7 +102,6 @@
 			<version>1.2.62</version>
 		</dependency>
 		
-		
 	    <!-- 添加极光sdk -->
 		<dependency>
 		    <groupId>cn.jpush.api</groupId>
