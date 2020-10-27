@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: rabbitmq
+  cloud:
+    config:
+      uri: http://localhost:6000/
+      profile: dev
+      label: master
+#logging:
+#  level:
+#    ROOT: DEBUG
+#  instance:
+#    instanceId: ${spring.application.name):${random.int}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+
