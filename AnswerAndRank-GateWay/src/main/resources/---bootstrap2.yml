@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: gateway
+  cloud:
+    config:
+      uri: http://localhost:1026/
+      profile: dev
+      label: master
+      
+    gateway:
+      routes:
+      # =====================================
+      # to run server
+      # $ wscat --listen 9000
+      # to run client
+      # $ wscat --connect ws://localhost:8080/echo
+#      - id: websocket_test
+#        uri: ws://localhost:9000
+#        order: 9000
+#        predicates:
+#        - Path=/echo
+      # =====================================
+      - id: grabservice-websocket-info
+        uri: lb:ws://BULLET
+        predicates:
+        - Path=/webSecket/info/**
+        filters:
+        #- StripPrefix=2
+        
+      - id: grabservice-websocket
+        uri: lb://BULLET
+        predicates:
+        - Path=/webSecket/**
+        filters:
+        #- StripPrefix=2
+        
+      - id: bulletscreen
+        # 重点！/info必须使用http进行转发，lb代表从注册中心获取服务
+        uri: lb://bullet
+        predicates:
+        # 重点！转发该路径！
+        - Path=/bullet/info/**
+        
+      - id: bulletscreen
+        # 重点！lb:ws://代表从注册中心获取服务，并且转发协议为websocket，这种格式怀疑人生！
+        uri: lb:ws://bullet
+        predicates:
+        # 转发/bullet端点下的所有路径
+        - Path=/webSecket/**
+        
+      - id: demo
+        order: 5
+        uri: lb://wisdomclass-demo   #lb代表从注册中心获取服务,将path的请求路由到uri
+        predicates:
+          - Path=/wisdomclass-demo/**
+        filters:
+          - StripPrefix=1    #除去第一个/前缀，比如请求/wisdomclass-demo/demo,会去除前缀/wisdomclass-demo,请求到路由服务的 /demo接口
+          - name: Hystrix    #熔断
+            args:
+              name: fallbackcmd
+              fallbackUri: forward:/fallback  #网关的统一熔断接口
+              
+      - id: demo
+        uri: lb:ws://wisdomclass-demo     #wesocket协议
+        order: 2
+        predicates:
+          - Path=/wisdomclass-demo/topic/**
+        filters:
+          - StripPrefix=1
+          
+      

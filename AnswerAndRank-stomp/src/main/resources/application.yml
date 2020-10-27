@@ -1,0 +1,24 @@
+#rabbitmq
+spring:
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+server:
+  port: 8080
+  
+eureka:
+  client:
+     #下面两项没有代码提示
+     serviceUrl:
+      #服务治理地址
+      defaultZone: http://localhost:1025/eureka/
+#  instance:
+#    instanceId: ${spring.application.name):${random.int}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh

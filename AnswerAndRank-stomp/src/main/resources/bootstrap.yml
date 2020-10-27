@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: stomp-websoket
+#logging:
+#  level:
+#    ROOT: DEBUG
+#  instance:
+#    instanceId: ${spring.application.name):${random.int}
+
