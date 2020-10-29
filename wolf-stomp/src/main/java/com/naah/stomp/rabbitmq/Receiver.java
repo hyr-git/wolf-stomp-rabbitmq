@@ -35,10 +35,15 @@ public class Receiver {
     @RabbitHandler
     @RabbitListener(queues = RabbitConfig.TO_WEB_QUEUE_NAME)
     public void processToWeb(@Payload MQMessage message,@Headers Map<String,Object> header ) throws IOException {
-       // amqpTemplate.convertAndSend( destination, context);
         System.out.println("processToWeb  : " + JSON.toJSONString(message));
+    	String toUserId = message.getToUserId();
 
-        messagingTemplate.convertAndSend( "/"+RabbitConfig.TO_WEB_QUEUE_NAME, message);
+        messagingTemplate.convertAndSend( "/"+RabbitConfig.TO_WEB_QUEUE_NAME+"/"+toUserId, message);
+      	/***
+      	 * 
+      	 * /user/16033333333/toWeb
+      	 *messagingTemplate.convertAndSendToUser(toUserId,  "/"+RabbitConfig.TO_WEB_QUEUE_NAME, message);
+      	 **/   
     }
     
     /***
