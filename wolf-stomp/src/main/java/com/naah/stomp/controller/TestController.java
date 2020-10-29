@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.naah.stomp.model.User;
+import com.alibaba.fastjson.JSONObject;
 
 
 @Controller
@@ -33,9 +33,10 @@ public class TestController {
      */
     @MessageMapping("/stomp1.do")
     @SendTo("/topic/hello")
-    public User handleStomp(User user) {
+    public JSONObject handleStomp(JSONObject user) {
         System.out.println("stomp接收到客户端的请求："+user);
-        user.setName("messagemapping返回user");
+        JSONObject user2 = new JSONObject();
+    	user2.put("name", "messagemapping返回user");
         return user;
         
     }
@@ -46,11 +47,11 @@ public class TestController {
      */
     @MessageExceptionHandler({Exception.class,SQLException.class})
     @SendTo("/topic/errorTopic")
-    public User errorHandler(Throwable t) {
+    public JSONObject errorHandler(Throwable t) {
         System.out.println("异常统一处理");
-        User user = new User();
-        user.setName("异常统一处理:"+t.getMessage());;
-        return user;
+        JSONObject json = new JSONObject();
+        json.put("error_msg", "异常统一处理:"+t.getMessage());
+        return json;
     }
     
     
@@ -61,10 +62,10 @@ public class TestController {
      */
     @SubscribeMapping("/stomp2.do")
     @SendTo("/topic/hello")
-    public User subsTest() {
-        User user2 = new User();
-        user2.setName("订阅name");
-        user2.setPhone("subscribePhone");
+    public JSONObject subsTest() {
+    	JSONObject user2 = new JSONObject();
+    	user2.put("name", "订阅name");
+    	user2.put("phone", "subscribePhone");
         return user2;
     }
     

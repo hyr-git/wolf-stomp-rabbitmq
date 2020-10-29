@@ -6,6 +6,11 @@ spring:
     username: guest
     password: guest
 
+stomp.server: localhost
+stomp.port: 61613
+stomp.username: guest
+stomp.password: guest
+
 server:
   port: 8080
   
@@ -22,3 +27,7 @@ management:
     web:
       exposure:
         include: refresh
+        
+        
+jiguang.appkey: 1e623dc9152d6b4f7d465aa7
+jigaung.masterSecret: 091d24d2a8955c1b897e8dd6 

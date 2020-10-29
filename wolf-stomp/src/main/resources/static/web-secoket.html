@@ -4,9 +4,9 @@
   <title>stomp</title>
 </head>
 <body>
-<br/><input id="text" type="text" />
+<br/>
 <div id="conversationDiv">
-            <label>输入你的名字</label> <input type="text" id="name" />
+            <label>输入你的名字</label> <input type="text" id="name" value="16033333333"/>
             <br>
             <label>输入消息</label> <input type="text" id="messgae" />
             <button id="send" onclick="send();">发送</button>
@@ -27,9 +27,11 @@
 
   // 获取 STOMP 子协议的客户端对象
   var stompClient = Stomp.over(socket);
-
+  var name = $('#name').val();
   // 向服务器发起websocket连接并发送CONNECT帧
-  stompClient.connect({},
+  stompClient.connect( {
+      name: name // 携带客户端信息
+      },
       function connectCallback(frame) {
         // 连接成功时（服务器响应 CONNECTED 帧）的回调方法
         setMessageInnerHTML("连接成功");
@@ -46,14 +48,15 @@
       var returnData = response.body;
       setMessageInnerHTML("/topic/hello 你接收到的消息为:" + returnData);
     }); */
-	  stompClient.subscribe('/toWeb', function (response) {
+    var name = $('#name').val();
+	  stompClient.subscribe('/toWeb/'+name, function (response) {
 		  alert(response);
 	      var returnData = response.body;
-	      setMessageInnerHTML("/toWeb 你接收到的消息为:" + returnData);
+	      setMessageInnerHTML("/toWeb/"+name+" 你接收到的消息为:" + returnData);
 	    });
-	  stompClient.subscribe('/toApp', function (response) {
+	  stompClient.subscribe('/toApp/'+name, function (response) {
 	      var returnData = response.body;
-	      setMessageInnerHTML("/toApp--- 你接收到的消息为:" + returnData);
+	      setMessageInnerHTML("/toApp/"+name+"--- 你接收到的消息为:" + returnData);
 	    });
   }
   
@@ -65,9 +68,8 @@
   }
 
   function send() {
-    //stompClient.send("/app/greeting", {}, document.getElementById("text").value);
-         var name = $('#name').val();
-            var message = $('#messgae').val();
+    var name = $('#name').val();
+    var message = $('#messgae').val();
     stompClient.send("/app/greeting", {}, JSON.stringify({toUserId:name,context:message}));
 
     //stompClient.send("/app/toApp", {}, document.getElementById("text").value);
