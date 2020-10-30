@@ -23,7 +23,7 @@
 <script type="text/javascript">
   // 建立连接对象（还未发起连接）
   var socket = new SockJS("http://localhost:8080/webSocket");
-  socket = new SockJS("http://localhost:8888/webSocket");
+  //socket = new SockJS("http://localhost:8888/webSocket");
 
   // 获取 STOMP 子协议的客户端对象
   var stompClient = Stomp.over(socket);
@@ -49,14 +49,14 @@
       setMessageInnerHTML("/topic/hello 你接收到的消息为:" + returnData);
     }); */
     var name = $('#name').val();
-	  stompClient.subscribe('/toWeb/'+name, function (response) {
+	  stompClient.subscribe('/topic/toWeb.'+name, function (response) {
 		  alert(response);
 	      var returnData = response.body;
-	      setMessageInnerHTML("/toWeb/"+name+" 你接收到的消息为:" + returnData);
+	      setMessageInnerHTML("/topic/toWeb."+name+" 你接收到的消息为:" + returnData);
 	    });
-	  stompClient.subscribe('/toApp/'+name, function (response) {
+	  stompClient.subscribe('/topic/toApp.'+name, function (response) {
 	      var returnData = response.body;
-	      setMessageInnerHTML("/toApp/"+name+"--- 你接收到的消息为:" + returnData);
+	      setMessageInnerHTML("/topic/toApp."+name+"--- 你接收到的消息为:" + returnData);
 	    });
   }
   
