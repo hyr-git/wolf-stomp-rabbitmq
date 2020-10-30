@@ -3,16 +3,22 @@ package com.naah.stomp.config;
 import java.security.Principal;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
+import com.naah.stomp.interceptor.GetHeaderParamInterceptor;
 import com.naah.stomp.interceptor.HandleShakeInterceptors;
+import com.naah.stomp.properties.StompProperties;
 
 
 /*****
@@ -32,8 +38,16 @@ import com.naah.stomp.interceptor.HandleShakeInterceptors;
 @Configuration
 //使用此注解来标识WebSocket的broker，即使用broker来处理消息
 @EnableWebSocketMessageBroker
+@EnableConfigurationProperties(StompProperties.class)
 public class WebScoketStompConfig implements WebSocketMessageBrokerConfigurer {
 
+	@Autowired
+	private StompProperties stompProperties;
+	
+	@Autowired
+    private GetHeaderParamInterceptor getHeaderParamInterceptor;
+
+	
 	   /***
 	    * 修改消息代理的配置，默认处理以/topic为前缀的消息
 	    * setApplicationDestinationPrefixes：配置请求的根路径，表示通过MessageMapping处理/td/*请求，不会发送到代理
@@ -41,7 +55,8 @@ public class WebScoketStompConfig implements WebSocketMessageBrokerConfigurer {
 	    */
 	     @Override
 	    public void configureMessageBroker(MessageBrokerRegistry config) {
-	       
+	    	 config.setPathMatcher(new AntPathMatcher("."));
+
 	    	/**
 	    	 * 所有目的地以“/app”打头的消息都将会路由到带有@MessageMapping注解的方法中，而不会发布到代理队列或主题中
 	    	 * 该消息不会发送到代理MQ中，直接使用messageMapping控制器处理
@@ -57,8 +72,8 @@ public class WebScoketStompConfig implements WebSocketMessageBrokerConfigurer {
 	         * 客户端只可以订阅这两个前缀的主题
 	         * 启用simpleBroker,使得订阅到此"topic"等前缀的客户端可以收到消息
              */
-//基于内存实现的stomp代理，单机适用
-config.enableSimpleBroker("/topic","/queue","/toAll","/toWeb","toApp");
+			//基于内存实现的stomp代理，单机适用
+			//config.enableSimpleBroker("/topic","/queue","/toAll","/toWeb","toApp");
 
 	        
 	        /**
@@ -69,13 +84,14 @@ config.enableSimpleBroker("/topic","/queue","/toAll","/toWeb","toApp");
 	         * systemLogin:设置代理所需的密码
              * client:设置客户端连接代理所需的密码，默认为guest
 	         */
-	        /*config.enableStompBrokerRelay("/topic", "/queue")
-	            .setRelayHost("127.0.0.1")
-	            .setRelayPort(61613)
-	            .setSystemLogin("guest")
-	            .setSystemPasscode("guest")
-	            .setClientLogin("guest")
-	            .setClientPasscode("guest");*/
+	        config.enableStompBrokerRelay("/topic", "/queue")//,"/hyr/toWeb/","/hyr/toApp/"
+	            .setRelayHost(stompProperties.getServer())
+                .setRelayPort(stompProperties.getPort())
+                .setClientLogin(stompProperties.getUsername())
+                .setClientPasscode(stompProperties.getPassword())
+                .setSystemLogin(stompProperties.getUsername())
+                .setSystemPasscode(stompProperties.getPassword())
+                .setVirtualHost("/");
 	        
 	        /***
 	         * 设置单独发送到某个user需要添加的前缀,用户订阅/user/topic/work地址后会去掉/user,
@@ -85,7 +101,8 @@ config.enableSimpleBroker("/topic","/queue","/toAll","/toWeb","toApp");
 	         */
 	        //config.setUserDestinationPrefix("/user");
 	    }
-	 
+	     
+	     
 	    @Override
 	    public void registerStompEndpoints(StompEndpointRegistry registry) {
 	 
@@ -93,16 +110,17 @@ config.enableSimpleBroker("/topic","/queue","/toAll","/toWeb","toApp");
 	         * 路径"/websocket"被注册为STOMP端点，对外暴露，客户端通过该路径接入WebSocket服务
 	         */
 	        registry.addEndpoint("/webSocket").setAllowedOrigins("*")
-	        .setHandshakeHandler(new DefaultHandshakeHandler() {
+	        /*.setHandshakeHandler(new DefaultHandshakeHandler() {
 	            @Override
 	            protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
 	                  //将客户端标识封装为Principal对象，从而让服务端能通过getName()方法找到指定客户端
 	                  Object o = attributes.get("name");
 	                  return new FastPrincipal(o.toString());
 	            }
-	         })
+	         })*/
 	        //添加socket拦截器，用于从请求中获取客户端标识参数
-	        .addInterceptors(new HandleShakeInterceptors()).withSockJS();
+	        //.addInterceptors(new HandleShakeInterceptors())
+	        .withSockJS();
 	    }
 	    
 	    
@@ -119,6 +137,28 @@ config.enableSimpleBroker("/topic","/queue","/toAll","/toWeb","toApp");
 	        public String getName() {
 	            return name;
 	        }
+	    }
+	    
+	    /**
+	     * 注册stomp的端点
+	         具体参考 https://blog.csdn.net/qq_28988969/article/details/78134114
+	    @Override
+	    public void registerStompEndpoints(StompEndpointRegistry registry) {
+	        // 允许使用socketJs方式访问，访问点为webSocketServer，允许跨域
+	        // 在网页上我们就可以通过这个链接
+	        // http://localhost:8080/webSocketServer
+	        // 来和服务器的WebSocket连接
+	        registry.addEndpoint("/webSocketServer").setAllowedOrigins("*").withSockJS();
+	    }  */
+	    
+	    /**
+	     * 采用自定义拦截器，获取connect时候传递的参数
+	     * 配置客户端入站通道拦截器
+	     * @param registration
+	     */
+	    @Override
+	    public void configureClientInboundChannel(ChannelRegistration registration) {
+	        registration.interceptors(getHeaderParamInterceptor);
 	    }
 
 }

@@ -23,15 +23,22 @@
 <script type="text/javascript">
   // 建立连接对象（还未发起连接）
   var socket = new SockJS("http://localhost:8080/webSocket");
-  //socket = new SockJS("http://localhost:8888/webSocket");
+  socket = new SockJS("http://localhost:8888/webSocket");
 
   // 获取 STOMP 子协议的客户端对象
   var stompClient = Stomp.over(socket);
   var name = $('#name').val();
+  
+  var headers = {
+          login: name,
+          passcode: 'mypasscode',
+          Authorization:"123333",
+          grp:"grppush"
+        };
+  
+  
   // 向服务器发起websocket连接并发送CONNECT帧
-  stompClient.connect( {
-      name: name // 携带客户端信息
-      },
+      stompClient.connect(headers,
       function connectCallback(frame) {
         // 连接成功时（服务器响应 CONNECTED 帧）的回调方法
         setMessageInnerHTML("连接成功");
