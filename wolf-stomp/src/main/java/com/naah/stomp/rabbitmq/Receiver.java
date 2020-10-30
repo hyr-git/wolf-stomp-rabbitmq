@@ -1,6 +1,8 @@
 package com.naah.stomp.rabbitmq;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.naah.stomp.config.RabbitConfig;
+import com.naah.stomp.jiguang.utils.JPushManage;
 import com.naah.stomp.model.MQMessage;
 
 
@@ -37,7 +40,7 @@ public class Receiver {
     public void processToWeb(@Payload MQMessage message,@Headers Map<String,Object> header ) throws IOException {
         System.out.println("processToWeb  : " + JSON.toJSONString(message));
     	String toUserId = message.getToUserId();
-
+    	toUserId = "16033333333";
         messagingTemplate.convertAndSend( "/"+RabbitConfig.TO_WEB_QUEUE_NAME+"/"+toUserId, message);
       	/***
       	 * 
@@ -55,28 +58,13 @@ public class Receiver {
     @RabbitListener(queues = RabbitConfig.TO_APP_QUEUE_NAME)
     public void processToApp(@Payload MQMessage message,@Headers Map<String,Object> header ) throws IOException {
        System.out.println("processToAPP  : " + JSON.toJSONString(message));
-
+       String toUserId = message.getToUserId();
        // amqpTemplate.convertAndSend( destination, context);
         messagingTemplate.convertAndSend( "/"+RabbitConfig.TO_APP_QUEUE_NAME, message);
-/*        RequestMessage mqTask = new RequestMessage(  );
-        BeanUtils.copyProperties( JsonUtils.jsonToObject( context,RequestMessage.class ),mqTask );
-
-        if (Objects.equals( mqTask.getType(), "1" )) {
-            Record record = new Record( RandomUtils.number( 9 ),
-                                        mqTask.getUserId(),
-                                        mqTask.getQuestionId(),
-                                        mqTask.getContent(),
-                                        null,null,
-                                        TimeUtils.getNow());
-            //recordService.saveOrUpdate( record );
-        }
-
-        if (Objects.equals( mqTask.getType(), "2" )) {
-            String destination = "/topic/" +mqTask.getRoom();
-
-            messagingTemplate.convertAndSend( destination, mqTask);
-        }
-*/
+        List<String> tagsList = new ArrayList<>();
+    	tagsList.add(toUserId);
+    	tagsList.add("17088888888");
+        JPushManage.sendToAliasList(tagsList,JSON.toJSONString(message));
     }
 
 }
