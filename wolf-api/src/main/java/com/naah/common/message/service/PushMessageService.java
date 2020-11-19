@@ -7,9 +7,9 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.carsir.common.message.component.JPushManage;
-import com.carsir.common.message.config.RabbitConfig;
-import com.carsir.common.model.MQMessage;
+import com.naah.common.message.component.JPushManage;
+import com.naah.common.message.config.RabbitConfig;
+import com.naah.common.message.model.MQMessage;
 
 import lombok.extern.slf4j.Slf4j;
 

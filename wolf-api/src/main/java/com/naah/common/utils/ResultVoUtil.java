@@ -1,7 +1,6 @@
 package com.naah.common.utils;
 
-
-import com.naah.mq.model.ResultVo;
+import com.naah.common.model.ResultVo;
 
 /**
  * @Auther: zj

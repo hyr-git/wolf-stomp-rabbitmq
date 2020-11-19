@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.naah.mq.component.DirectSender;
-import com.naah.mq.config.DirectRabbitConfig;
-import com.naah.mq.model.MQMessage;
+import com.naah.common.config.DirectRabbitConfig;
+import com.naah.common.message.model.MQMessage;
+import com.naah.common.mq.component.DirectSender;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;

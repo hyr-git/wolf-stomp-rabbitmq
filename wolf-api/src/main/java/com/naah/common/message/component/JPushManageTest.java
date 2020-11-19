@@ -45,12 +45,12 @@ public class JPushManageTest {
         return JPushUtil.sendToAliasList(jpushClient,aliasList,msgContent,extranKey,extranParam,msgTitle);
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
     	JPushManageTest fd = new JPushManageTest();
     	fd.testMain();
 	}
     
-    public void testMain() {
+    public void testMain() throws Exception {
     	JPushClient jpushClient = getJPushClientByTag(JPushAppEnums.CARSIR_APP.getCode());
     	for (int i = 1; i <= 3; i++) {
     		//tewst(jpushClient,i);
