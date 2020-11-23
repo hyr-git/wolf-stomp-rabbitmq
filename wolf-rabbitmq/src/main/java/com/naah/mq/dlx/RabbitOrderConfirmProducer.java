@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
+import com.naah.mq.dlx.listener.ProductReturnListener;
+import com.naah.mq.dlx.listener.ProducterConfirmListener;
 import com.rabbitmq.client.AMQP.Exchange;
 import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
@@ -23,9 +25,15 @@ import lombok.extern.slf4j.Slf4j;
  * 消息先到 order_queue 中，然后 10s 钟没有消费，消息流转到死信队列 dlx.queue 中
  * @date 2018/10/15 - 14:10
  * https://www.cnblogs.com/yibutian/p/9469057.html
+ * 
+ * 
+ * @备注
+ *    消息确认机制
+ *    消息生成这通过调用channel.confirmSelect()方法将Channel信道设置陈恒confirm模式。
+ *    一旦设置成confirm模式，该信道上的所有消息都会被指派一个唯一的ID(从1开始)，一旦消息被对应的exchange接受，
  */
 @Slf4j
-public class RabbitOrderProducer {
+public class RabbitOrderConfirmProducer {
 
 	private static final String IP_ADDRESS = "127.0.0.1";
 	private static final int PORT = 5672;
@@ -59,7 +67,22 @@ public class RabbitOrderProducer {
 			 channel = connection.createChannel();
 			
 			 //设置消息确认机制
+			 /*
+			  * 消息生产者通过调用channel.confirmSelect()方法或者将channel信道设置成confirm模式,一旦信道被设置成confirm模式,
+			  * 该信道上的所有消息都会被指定一个唯一的消息id(从1开始),一旦交换器接收到对应的交换器,broker会发送一个确认之给对应的生产者(其中deliveryTag就是唯一的消息id)，
+			  * 这样消息生成这就知道该消息已经被推送给对应的broker
+			  * 
+			  * confirm最大的优点就是在于他的异步(rabbitmq事务是同步性能太低),生产者在发送一条消息之后,会在等待确认的同时发送另外的消息；当消息得到确认，生产者会通过消息确认接口进行处理该回调信息，
+			  * 如果因为rabbitmq内部的问题broker导致消息丢失,会发生一条nack消息,生产者同样可以处理回方法中处理该nack的消息。
+			  * 
+			  * 在channel设置为confirm之后,所有被publish的后续消息都被confirm(ack)或者nack一次，但是没有对消息被confirm的快慢做任何保证，并且同一条消息不会既被confirm又被nack.
+			  *
+			  * ####已经被设置里transaction的channel不能再被设置为confirm,即transaction与confirm不能并存#####
+			  */
 			 channel.confirmSelect();
+			 
+			 //注册消息确认监听器
+			 channel.addConfirmListener(new ProducterConfirmListener());
 			 
 			/*
 			 * 2、初始化topic类型的持久化非自动删除的交换器,指定交换器的名称、类型、是否持久化、是否自动删除
@@ -159,6 +182,8 @@ public class RabbitOrderProducer {
 		     */
 			channel.basicPublish(ORDER_EXCHANGE_NAME, "order.save",true,false, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes(StandardCharsets.UTF_8));
 
+			//注册消息结果返回监听器
+			channel.addReturnListener(new ProductReturnListener());
 			log.info("消息发送完成......");
 			
 		}finally {
