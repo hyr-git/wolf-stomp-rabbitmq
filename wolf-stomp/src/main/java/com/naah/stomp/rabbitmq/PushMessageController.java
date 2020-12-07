@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.naah.stomp.config.RabbitConfig;
-import com.naah.stomp.model.MQMessage;
+import com.naah.common.message.config.RabbitConfig;
+import com.naah.common.message.model.MQMessage;
 
 @RestController
 public class PushMessageController {

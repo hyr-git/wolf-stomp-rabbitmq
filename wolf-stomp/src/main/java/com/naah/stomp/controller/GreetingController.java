@@ -8,7 +8,8 @@ import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
-import com.naah.stomp.model.MQMessage;
+import com.naah.common.message.model.MQMessage;
+
 
 @Controller
 public class GreetingController {

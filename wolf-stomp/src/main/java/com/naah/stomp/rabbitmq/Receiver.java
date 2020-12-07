@@ -14,10 +14,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
-import com.naah.stomp.config.RabbitConfig;
-import com.naah.stomp.jiguang.utils.JPushManage;
-import com.naah.stomp.model.MQMessage;
-
+import com.naah.common.message.component.JPushManage;
+import com.naah.common.message.config.RabbitConfig;
+import com.naah.common.message.model.MQMessage;
 
 /**
  * @Auther: zj
@@ -28,6 +27,9 @@ import com.naah.stomp.model.MQMessage;
 public class Receiver {
 
 
+    @Autowired
+    private JPushManage jPushManage;
+    
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
     
@@ -71,7 +73,7 @@ public class Receiver {
         List<String> tagsList = new ArrayList<>();
     	tagsList.add(toUserId);
     	tagsList.add("17088888888");
-        JPushManage.sendToAliasList(tagsList,JSON.toJSONString(message));
+    	jPushManage.sendCarsirMessageAllByAlias(message);
     }
 
 }

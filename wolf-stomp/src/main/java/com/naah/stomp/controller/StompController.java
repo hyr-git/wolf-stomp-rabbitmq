@@ -8,7 +8,6 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import com.naah.stomp.model.BulletMessageDTO;
 
 @Controller
 public class StompController {
@@ -21,7 +20,7 @@ public class StompController {
     //SendTo 发送至 Broker 下的指定订阅路径
     //传入的参数为客户端发送过来的消息,是自动绑定的
     @SendTo("/toAll/bulletScreen")
-    public String say(BulletMessageDTO clientMessage) {
+    public String say(com.naah.common.model.BulletMessageDTO clientMessage) {
         //方法用于广播测试
         if (clientMessage!=null){
             if (clientMessage.getMessage()!=null){

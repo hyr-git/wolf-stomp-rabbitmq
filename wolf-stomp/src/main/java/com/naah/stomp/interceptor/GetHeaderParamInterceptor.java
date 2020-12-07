@@ -1,6 +1,5 @@
 package com.naah.stomp.interceptor;
 
-import java.util.LinkedList;
 import java.util.Map;
 
 import org.springframework.messaging.Message;
@@ -11,8 +10,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptorAdapter;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.stereotype.Component;
-
-import com.naah.stomp.model.UserStomp;
 
 /**
  * @author : hao
