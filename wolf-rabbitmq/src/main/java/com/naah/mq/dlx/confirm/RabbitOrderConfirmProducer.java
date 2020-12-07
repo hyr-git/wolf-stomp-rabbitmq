@@ -1,4 +1,4 @@
-package com.naah.mq.dlx;
+package com.naah.mq.dlx.confirm;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -155,7 +155,7 @@ public class RabbitOrderConfirmProducer {
 		     * 发布一条不用持久化的消息，且设置两个监听。
 		     * @param exchange 消息交换机名称,空字符串将使用直接交换器模式，发送到默认的Exchange=amq.direct。此状态下，RoutingKey默认和Queue名称相同
 		     * @param routingKey 路由关键字
-		     * @param mandatory 监听是否有符合的队列,
+		     * @param mandatory 监听是否有符合的队列,  失败确认
 		     *       当mandatory为true时，exchange根据自身类型和消息routeKey无法找到符合条件的queue，那么会调用basic.return方法将消息返回给生产者（Basic.Return + Content-Header + Content-Body）；
 		     *       当mandatory为false时，broker会直接将消息扔掉。 
 		     * @param immediate 监听符合的队列上是有至少一个Consumer,

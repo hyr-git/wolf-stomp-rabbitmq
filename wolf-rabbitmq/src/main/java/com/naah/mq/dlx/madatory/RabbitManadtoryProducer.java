@@ -35,7 +35,7 @@ public class RabbitManadtoryProducer {
 	private static final String IP_ADDRESS = "127.0.0.1";
 	private static final int PORT = 5672;
 	
-	static String ORDER_EXCHANGE_NAME = "order_manadtory_exchange";
+	static String ORDER_EXCHANGE_NAME = "order_manadtory_exchange_topic";
 	
 	 //失败通知--当mandatory设置为true时,rabbitMQ接收到消息无法进行路由时,会将消息退回给生产者;否则设置为false会将消息直接丢弃。
     private final static boolean MANDATORY = true; 
@@ -72,7 +72,7 @@ public class RabbitManadtoryProducer {
 			 * @param arguments 队列的其他属性(构造参数)
 			 * @return Queue.Declare：宣告队列的声明确认方法已成功声明
 			 */
-			Exchange.DeclareOk declareOk = channel.exchangeDeclare(ORDER_EXCHANGE_NAME, BuiltinExchangeType.DIRECT);
+			Exchange.DeclareOk declareOk = channel.exchangeDeclare(ORDER_EXCHANGE_NAME, BuiltinExchangeType.TOPIC);
 		
 			
 			/*

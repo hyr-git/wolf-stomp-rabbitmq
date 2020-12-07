@@ -79,12 +79,11 @@ public class RabbitWorkOrderSender {
 	            @Override
 	            public void handleAck(long deliveryTag, boolean multiple) throws IOException {
 	                System.out.println("收到消息确认，："+deliveryTag);
-	                throw new IOException("数据库异常，确认失败");
 	            }
 
 	            @Override
 	            public void handleNack(long deliveryTag, boolean multiple) throws IOException {
-                    
+	            	  throw new IOException("数据库异常，确认失败");
 	            }
 	        });			
 			

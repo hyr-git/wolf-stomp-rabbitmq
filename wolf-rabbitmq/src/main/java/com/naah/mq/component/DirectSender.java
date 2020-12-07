@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 /***
  * 生产者
  * @author m1832
- *
+ * direct 交换器是默认交换器。声明一个队列时，会自动绑定到默认交换器，并且以队列名称作为路由 键
  */
 @Component
 public class DirectSender {

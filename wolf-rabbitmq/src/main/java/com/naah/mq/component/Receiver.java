@@ -25,9 +25,6 @@ public class Receiver {
 	@Autowired
 	private AmqpTemplate amqpTemplate;
 
-   /* @Autowired
-    RecordService recordService;*/
-
     @RabbitHandler
     @RabbitListener(queues = "topic")
     public void process(String context) throws IOException {
