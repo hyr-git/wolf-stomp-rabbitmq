@@ -1,0 +1,31 @@
+spring:
+    redis:
+      host: dev.carsir.xin
+      port: 6379
+      password: devTaG8ie0)fE
+      database: 1
+      jedis:
+        pool:
+          max-active: 8
+          max-wait: -1
+          max-idle: 500
+          min-idle: 0
+      lettuce:
+        shutdown-timeout: 0    
+
+server:
+  port: 8080
+  
+#eureka:
+#  client:
+     #下面两项没有代码提示
+#     serviceUrl:
+      #服务治理地址
+#      defaultZone: http://localhost:1025/eureka/
+#  instance:
+#    instanceId: ${spring.application.name):${random.int}
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#       include: refresh
