@@ -6,8 +6,9 @@ import java.util.concurrent.CountDownLatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.naah.redis.lock.redisson.simple.AquiredLockWorker;
-import com.naah.redis.lock.redisson.simple.RedisLocker;
+import com.naah.redis.lock.redisson.simple.component.AquiredLockWorker;
+import com.naah.redis.lock.redisson.simple.component.impl.RedisLocker;
+
 
 
 public class RedisLockTest {

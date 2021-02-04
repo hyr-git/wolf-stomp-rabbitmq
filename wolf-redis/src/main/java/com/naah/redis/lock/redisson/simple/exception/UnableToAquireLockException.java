@@ -1,4 +1,4 @@
-package com.naah.redis.lock.redisson.simple;
+package com.naah.redis.lock.redisson.simple.exception;
 /**
  * Created by fangzhipeng on 2017/4/5.
  * 异常类

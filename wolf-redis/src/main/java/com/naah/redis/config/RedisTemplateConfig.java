@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  * value序列化规则Jackson2JsonRedisSerializer
  */
 @Configuration
-public class RedisConfig {
+public class RedisTemplateConfig {
 	
 	@Bean
     public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory factory){

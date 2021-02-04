@@ -1,8 +1,10 @@
-package com.naah.redis.lock.redisson.simple;
+package com.naah.redis.lock.redisson.simple.component;
 
 import java.util.concurrent.TimeUnit;
 
 import org.redisson.api.RLock;
+
+import com.naah.redis.lock.redisson.simple.exception.UnableToAquireLockException;
 
 /**
  * Created by fangzhipeng on 2017/4/5.

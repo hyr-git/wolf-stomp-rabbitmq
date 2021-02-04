@@ -1,4 +1,4 @@
-package com.naah.redis.lock.redisson.pro;
+package com.naah.redis.lock.redisson.pro.component;
 import java.util.concurrent.TimeUnit;
 
 import org.redisson.api.RLock;

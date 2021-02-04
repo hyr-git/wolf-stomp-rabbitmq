@@ -1,8 +1,11 @@
-package com.naah.redis.lock.redisson.pro;
+package com.naah.redis.lock.redisson.pro.component.impl;
+
+import java.util.concurrent.TimeUnit;
+
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 
-import java.util.concurrent.TimeUnit;
+import com.naah.redis.lock.redisson.pro.component.DistributedLocker;
 
 public class RedissonDistributedLocker implements DistributedLocker {
     

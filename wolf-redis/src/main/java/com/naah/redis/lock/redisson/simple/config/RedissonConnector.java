@@ -1,4 +1,4 @@
-package com.naah.redis.lock.redisson.simple;
+package com.naah.redis.lock.redisson.simple.config;
 
 import javax.annotation.PostConstruct;
 

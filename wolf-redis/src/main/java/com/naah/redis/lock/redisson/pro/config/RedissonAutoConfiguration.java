@@ -1,4 +1,4 @@
-package com.naah.redis.lock.redisson.pro;
+package com.naah.redis.lock.redisson.pro.config;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -12,9 +12,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@ConditionalOnClass(Config.class)
-@EnableConfigurationProperties(RedissonProperties.class)
+import com.naah.redis.lock.redisson.pro.component.DistributedLocker;
+import com.naah.redis.lock.redisson.pro.component.impl.RedissonDistributedLocker;
+import com.naah.redis.lock.redisson.pro.util.RedissLockUtil;
+
+//@Configuration
+//@ConditionalOnClass(Config.class)
+//@EnableConfigurationProperties(RedissonProperties.class)
 public class RedissonAutoConfiguration {
 
     @Autowired
@@ -64,12 +68,14 @@ public class RedissonAutoConfiguration {
     /**
      * 装配locker类，并将实例注入到RedissLockUtil中
      * @return
+     * 
+     */
     @Bean
     DistributedLocker distributedLocker(RedissonClient redissonClient) {
         DistributedLocker locker = new RedissonDistributedLocker();
-        //locker.setRedissonClient(redissonClient);
+        ((RedissonDistributedLocker) locker).setRedissonClient(redissonClient);
         RedissLockUtil.setLocker(locker);
         return locker;
-    }*/
+    }
 
 }
