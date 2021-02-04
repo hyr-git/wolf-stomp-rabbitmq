@@ -3,13 +3,16 @@ package com.naah.redis.lock.test;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.naah.redis.lock.redisson.RedisLocker;
 
 
 public class RedisLockTest {
 	
-	//@Autowired
-    //RedisLocker distributedLocker;
+	@Autowired
+    RedisLocker distributedLocker;
 	
     @RequestMapping(value = "/redlock")
     public String testRedlock() throws Exception{

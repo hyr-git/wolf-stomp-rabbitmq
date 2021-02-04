@@ -15,6 +15,7 @@ public class RedisLocker  implements DistributedLocker{
 
     @Autowired
     RedissonConnector redissonConnector;
+    
     @Override
     public <T> T lock(String resourceName, AquiredLockWorker<T> worker) throws InterruptedException, UnableToAquireLockException, Exception {
 

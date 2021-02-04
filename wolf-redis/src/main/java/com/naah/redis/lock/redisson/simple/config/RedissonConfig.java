@@ -32,6 +32,7 @@ public class RedissonConfig {
         Config config = new Config();
         config.useSingleServer().setAddress(host + ":" + port).setPassword(password).setDatabase(database);
         //config.useSingleServer().setAddress("redis://" + host + ":" + port).setPassword(password).setDatabase(database);
+       
         //添加主从配置
         //config.useMasterSlaveServers().setMasterAddress("").setPassword("").addSlaveAddress(new String[]{"",""});
 
